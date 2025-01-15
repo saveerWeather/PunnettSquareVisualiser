@@ -61,7 +61,7 @@ This project takes any two alleles provided as input and generates a Punnett squ
    git clone https://github.com/saveerWeather/PunnettSquareVisualiser.git
 2. **Navigate to the project directory:**
    ```bash
-   cd punnett-square-visualizer
+   cd PunnettSquareVisualizer
 3. **Open index.html in your browser to run the application**
    
 ## Usage
