@@ -55,7 +55,7 @@ Clone the repository:
 
 bash
 Copy code
-git clone https://github.com/yourusername/punnett-square-visualizer.git  
+git clone https://github.com/saveerWeather/PunnettSquareVisualiser.git  
 Navigate to the project directory:
 
 bash
