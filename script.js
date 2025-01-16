@@ -43,11 +43,43 @@ function initPunnett(){
             possibleCombosParent2 = temp;
         }
     }
-    blanktable = createTableContent((possibleCombosParent1), (possibleCombosParent2));
+    table = createTableContent((possibleCombosParent1), (possibleCombosParent2));
 
-    displayTable(possibleCombosParent1, possibleCombosParent2, blanktable);
+    displayTable(possibleCombosParent1, possibleCombosParent2, table);
+    //create hashmap in order to count the occurences of each genotype in table
+    let countMap = new Map();
+    for(i=0; i<table.length; i++){
+        for(j=0; j<table[i].length; j++){
+            if(countMap.has(table[i][j])){
+                countMap.set(table[i][j], countMap.get(table[i][j])+1);
+            }else{
+                countMap.set(table[i][j], 1);
+            }
+        }
+    }
+    console.log(countMap);
+    genotypes = countMap;
+    //get countmap's keys
+    let keys = Array.from(countMap.keys());
+    let values = Array.from(countMap.values());
+ 
+    let phenotypes = new Map();
+    for(i=0; i<keys.length; i++){
+        unreduced= keys[i];
+        reduced = "";
+        for(j=0; j<unreduced.length; j+=2){
+            reduced += unreduced[j];
+        }
+        if(phenotypes.has(reduced)){
+            phenotypes.set(reduced, phenotypes.get(reduced)+values[i]);
+        }else{
+            phenotypes.set(reduced, values[i]);
+        }
+    }
+    displayStatTable(genotypes, phenotypes);
+   
+
     
-  
 }
 function createTableContent(rowHeads, colHeads) {
     const rows = rowHeads.length;
@@ -79,9 +111,9 @@ function createBlankTable(rows, cols) {
     for (let i = 0; i < rows; i++) {
         const row = [];
         for (let j = 0; j < cols; j++) {
-            row.push(''); // Fill each cell with an empty string
+            row.push(''); 
         }
-        blankTable.push(row); // Add the row to the table
+        blankTable.push(row); 
     }
     return blankTable;
 }
@@ -119,6 +151,82 @@ function displayTable(rowHeads, colHeads, contents) {
 
         table.appendChild(row);
     });
+
+    container.appendChild(table);
+}
+
+function displayStatTable(genotypes, phenotypes) {
+    const container = document.getElementById('data');
+    container.innerHTML = '';
+    const table = document.createElement('table');
+    table.style.border = "1px solid black";
+    table.style.borderCollapse = "collapse";
+
+    const headerRow = document.createElement('tr');
+    ["Genotype", "Count", "Percent", "\t", "Phenotype", "Count", "Percent"].forEach(col => {
+        const th = document.createElement('th');
+        th.textContent = col;
+        th.style.border = "1px solid black";
+        th.style.padding = "5px";
+        headerRow.appendChild(th);
+    });
+    table.appendChild(headerRow);
+
+    const genotypeKeys = Array.from(genotypes.keys());
+    const genotypeValues = Array.from(genotypes.values());
+    const phenotypeKeys = Array.from(phenotypes.keys());
+    const phenotypeValues = Array.from(phenotypes.values());
+
+    const totalGenotypes = genotypeValues.reduce((a, b) => a + b, 0);
+    const totalPhenotypes = phenotypeValues.reduce((a, b) => a + b, 0);
+    const rows = Math.max(genotypeKeys.length, phenotypeKeys.length);
+
+    for (let i = 0; i < rows; i++) {
+        const row = document.createElement('tr');
+
+        if (i < genotypeKeys.length) {
+            [genotypeKeys[i], genotypeValues[i], ((genotypeValues[i] / totalGenotypes) * 100).toFixed(2) + "%"].forEach(val => {
+                const td = document.createElement('td');
+                td.textContent = val;
+                td.style.border = "1px solid black";
+                td.style.padding = "5px";
+                row.appendChild(td);
+            });
+        } else {
+            for (let j = 0; j < 3; j++) {
+                const td = document.createElement('td');
+                td.textContent = '';
+                td.style.border = "1px solid black";
+                td.style.padding = "5px";
+                row.appendChild(td);
+            }
+        }
+
+        const separator = document.createElement('td');
+        separator.textContent = "\t";
+        separator.style.border = "none";
+        row.appendChild(separator);
+
+        if (i < phenotypeKeys.length) {
+            [phenotypeKeys[i], phenotypeValues[i], ((phenotypeValues[i] / totalPhenotypes) * 100).toFixed(2) + "%"].forEach(val => {
+                const td = document.createElement('td');
+                td.textContent = val;
+                td.style.border = "1px solid black";
+                td.style.padding = "5px";
+                row.appendChild(td);
+            });
+        } else {
+            for (let j = 0; j < 3; j++) {
+                const td = document.createElement('td');
+                td.textContent = '';
+                td.style.border = "1px solid black";
+                td.style.padding = "5px";
+                row.appendChild(td);
+            }
+        }
+
+        table.appendChild(row);
+    }
 
     container.appendChild(table);
 }
