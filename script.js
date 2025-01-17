@@ -118,34 +118,45 @@ function createBlankTable(rows, cols) {
     return blankTable;
 }
 
-//GPT GENERATED FUNCTION
+//MOSTLY GPT-4o GENERATED FUNCTIONS BELOW
 function displayTable(rowHeads, colHeads, contents) {
-   
     const container = document.getElementById('punnett-square');
     container.innerHTML = ''; 
+
     const table = document.createElement('table');
+    table.style.border = "1px solid black";
+    table.style.borderCollapse = "collapse";
+
     const headerRow = document.createElement('tr');
 
     const emptyCorner = document.createElement('th');
+    emptyCorner.style.border = "1px solid black";
+    emptyCorner.style.padding = "5px";
     headerRow.appendChild(emptyCorner);
 
     colHeads.forEach(colHead => {
         const th = document.createElement('th');
         th.textContent = colHead;
+        th.style.border = "1px solid black";
+        th.style.padding = "5px";
         headerRow.appendChild(th);
     });
 
-    table.appendChild(headerRow); 
+    table.appendChild(headerRow);
 
     rowHeads.forEach((rowHead, rowIndex) => {
         const row = document.createElement('tr');
         const th = document.createElement('th');
         th.textContent = rowHead;
+        th.style.border = "1px solid black";
+        th.style.padding = "5px";
         row.appendChild(th);
 
         contents[rowIndex].forEach(content => {
             const td = document.createElement('td');
             td.textContent = content;
+            td.style.border = "1px solid black";
+            td.style.padding = "5px";
             row.appendChild(td);
         });
 
@@ -154,6 +165,7 @@ function displayTable(rowHeads, colHeads, contents) {
 
     container.appendChild(table);
 }
+
 
 function displayStatTable(genotypes, phenotypes) {
     const container = document.getElementById('data');
